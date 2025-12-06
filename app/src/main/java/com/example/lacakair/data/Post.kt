@@ -9,7 +9,10 @@ data class Post(
     val imageUrl: String = "",
     val caption: String = "",
     val likes: List<String> = emptyList(),
-    val timestamp: Any = System.currentTimeMillis()
+    val timestamp: Any = System.currentTimeMillis(),
+    val latitude: Double? = null,
+    val longitude: Double? = null,
+    val locationName: String? = null
 ) {
     fun getTimestampLong(): Long {
         return when (timestamp) {
@@ -17,5 +20,9 @@ data class Post(
             is Timestamp -> timestamp.seconds * 1000
             else -> System.currentTimeMillis()
         }
+    }
+
+    fun hasLocation(): Boolean {
+        return latitude != null && longitude != null
     }
 }

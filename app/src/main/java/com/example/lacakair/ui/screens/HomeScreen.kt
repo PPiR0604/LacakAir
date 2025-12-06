@@ -11,12 +11,14 @@ import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,7 +34,8 @@ fun HomeScreen(
     authViewModel: AuthViewModel,
     postViewModel: PostViewModel,
     onLogout: () -> Unit,
-    onNavigateToCreatePost: () -> Unit
+    onNavigateToCreatePost: () -> Unit,
+    onNavigateToMap: () -> Unit = {}
 ) {
     val posts by postViewModel.posts.collectAsState()
     val isLoading by postViewModel.isLoading.collectAsState()
@@ -49,6 +52,9 @@ fun HomeScreen(
                     )
                 },
                 actions = {
+                    IconButton(onClick = onNavigateToMap) {
+                        Icon(painter = painterResource(com.example.lacakair.R.drawable.map), contentDescription = "Peta", modifier = Modifier.padding(4.dp))
+                    }
                     IconButton(onClick = {
                         authViewModel.logout()
                         onLogout()
@@ -163,12 +169,36 @@ fun PostCard(
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-                Text(
-                    text = post.userName,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                Column {
+                    Text(
+                        text = post.userName,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    // Location info di bawah nama user
+                    if (post.locationName != null) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.LocationOn,
+                                contentDescription = "Location",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(14.dp)
+                            )
+
+                            Spacer(modifier = Modifier.width(4.dp))
+
+                            Text(
+                                text = post.locationName,
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                            )
+                        }
+                    }
+                }
             }
 
             // Post image

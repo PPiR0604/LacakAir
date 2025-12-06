@@ -102,6 +102,9 @@ class PostViewModel : ViewModel() {
         context: Context,
         imageUri: Uri,
         caption: String,
+        latitude: Double? = null,
+        longitude: Double? = null,
+        locationName: String? = null,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
@@ -142,7 +145,10 @@ class PostViewModel : ViewModel() {
                     "imageUrl" to imageUrl,
                     "caption" to caption,
                     "likes" to emptyList<String>(),
-                    "timestamp" to System.currentTimeMillis()
+                    "timestamp" to System.currentTimeMillis(),
+                    "latitude" to latitude,
+                    "longitude" to longitude,
+                    "locationName" to locationName
                 )
 
                 firestore.collection("posts").add(post).await()

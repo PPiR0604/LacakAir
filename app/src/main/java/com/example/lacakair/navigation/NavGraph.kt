@@ -19,6 +19,7 @@ import com.example.lacakair.camera.CameraScreen
 import com.example.lacakair.ui.screens.CreatePostScreen
 import com.example.lacakair.ui.screens.HomeScreen
 import com.example.lacakair.ui.screens.LoginScreen
+import com.example.lacakair.ui.screens.MapScreen
 import com.example.lacakair.ui.screens.RegisterScreen
 import com.example.lacakair.viewmodel.PostViewModel
 
@@ -87,6 +88,9 @@ fun NavGraph(
                 onNavigateToCreatePost = {
                     capturedImageUri = null
                     navController.navigate(Screen.CreatePost.createRoute())
+                },
+                onNavigateToMap = {
+                    navController.navigate(Screen.Map.route)
                 }
             )
         }
@@ -134,11 +138,14 @@ fun NavGraph(
                         popUpTo(Screen.Home.route) { inclusive = true }
                     }
                 },
-                onCreatePost = { uri, caption ->
+                onCreatePost = { uri, caption, latitude, longitude, locationName ->
                     postViewModel.createPostWithImage(
                         context = context,
                         imageUri = uri,
                         caption = caption,
+                        latitude = latitude,
+                        longitude = longitude,
+                        locationName = locationName,
                         onSuccess = {
                             navController.navigate(Screen.Home.route) {
                                 popUpTo(Screen.Home.route) { inclusive = true }
@@ -149,6 +156,15 @@ fun NavGraph(
                             println("Error creating post: $error")
                         }
                     )
+                }
+            )
+        }
+
+        composable(Screen.Map.route) {
+            MapScreen(
+                posts = postViewModel.posts.collectAsState().value,
+                onNavigateBack = {
+                    navController.popBackStack()
                 }
             )
         }

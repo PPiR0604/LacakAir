@@ -5,6 +5,7 @@ sealed class Screen(val route: String) {
     object Register : Screen("register")
     object Home : Screen("home")
     object Camera : Screen("camera")
+    object Map : Screen("map")
     object CreatePost : Screen("create_post?imageUri={imageUri}") {
         fun createRoute(imageUri: String? = null): String {
             return if (imageUri != null) "create_post?imageUri=$imageUri" else "create_post"
