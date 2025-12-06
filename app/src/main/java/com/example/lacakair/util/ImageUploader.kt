@@ -74,7 +74,8 @@ object ImageUploader {
                 if (jsonResponse.getBoolean("success")) {
                     val imageUrl = jsonResponse.getJSONObject("data").getString("url")
                     Log.d("ImageUploader", "Upload success: $imageUrl")
-                    Result.success(imageUrl)
+                    val newLink = imageUrl.replace("i.ibb.co", "i.ibb.co.com")
+                    Result.success(newLink)
                 } else {
                     val error = jsonResponse.optJSONObject("error")?.toString() ?: "Upload failed"
                     Log.e("ImageUploader", "Upload failed: $error")
