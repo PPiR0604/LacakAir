@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
@@ -29,6 +31,7 @@ import com.example.lacakair.auth.AuthViewModel
 import com.example.lacakair.data.Post
 import com.example.lacakair.viewmodel.PostViewModel
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,6 +46,9 @@ fun HomeScreen(
     val posts by postViewModel.posts.collectAsState()
     val isLoading by postViewModel.isLoading.collectAsState()
     val currentUser = FirebaseAuth.getInstance().currentUser
+    var selectedTab by remember { mutableStateOf(0) }
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -55,15 +61,7 @@ fun HomeScreen(
                     )
                 },
                 actions = {
-                    // Profile button
-                    IconButton(onClick = {
-                        currentUser?.uid?.let { onNavigateToProfile(it) }
-                    }) {
-                        Icon(Icons.Default.Person, contentDescription = "Profile")
-                    }
-                    IconButton(onClick = onNavigateToMap) {
-                        Icon(painter = painterResource(com.example.lacakair.R.drawable.map), contentDescription = "Peta", modifier = Modifier.padding(4.dp))
-                    }
+                    // Logout button
                     IconButton(onClick = {
                         authViewModel.logout()
                         onLogout()
@@ -77,6 +75,65 @@ fun HomeScreen(
                     actionIconContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
+        },
+        bottomBar = {
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.surface,
+                tonalElevation = 8.dp
+            ) {
+                NavigationBarItem(
+                    selected = selectedTab == 1,
+                    onClick = {
+                        selectedTab = 1
+                        onNavigateToMap()
+                    },
+                    icon = { Icon(painter = painterResource(com.example.lacakair.R.drawable.map), contentDescription = "Map", modifier = Modifier.size(16.dp)) },
+                    label = { Text("Peta") },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                )
+                NavigationBarItem(
+                    selected = selectedTab == 0,
+                    onClick = {
+                        selectedTab = 0
+                        // Scroll ke atas saat home button ditekan
+                        coroutineScope.launch {
+                            listState.animateScrollToItem(0)
+                        }
+                    },
+                    icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+                    label = { Text("Home") },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                )
+
+                NavigationBarItem(
+                    selected = selectedTab == 2,
+                    onClick = {
+                        selectedTab = 2
+                        currentUser?.uid?.let { onNavigateToProfile(it) }
+                    },
+                    icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
+                    label = { Text("Profile") },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                )
+            }
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -117,6 +174,7 @@ fun HomeScreen(
                 }
             } else {
                 LazyColumn(
+                    state = listState,
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(vertical = 8.dp)
                 ) {
@@ -125,7 +183,10 @@ fun HomeScreen(
                             post = post,
                             currentUserId = currentUser?.uid ?: "",
                             onLikeClick = { postViewModel.toggleLike(post.id) },
-                            onUserClick = { onNavigateToProfile(post.userId) }
+                            onUserClick = {
+                                selectedTab = 2
+                                onNavigateToProfile(post.userId)
+                            }
                         )
                     }
                 }

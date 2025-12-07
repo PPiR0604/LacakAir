@@ -2,4 +2,10 @@
 <resources>
 
     <style name="Theme.LacakAir" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:statusBarColor">@color/primary_blue</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
 </resources>

@@ -171,6 +171,14 @@ fun NavGraph(
                 posts = postViewModel.posts.collectAsState().value,
                 onNavigateBack = {
                     navController.popBackStack()
+                },
+                onNavigateToHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true }
+                    }
+                },
+                onNavigateToProfile = { userId ->
+                    navController.navigate(Screen.Profile.createRoute(userId))
                 }
             )
         }
@@ -189,6 +197,14 @@ fun NavGraph(
                 profileViewModel = profileViewModel,
                 onNavigateBack = {
                     navController.popBackStack()
+                },
+                onNavigateToHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true }
+                    }
+                },
+                onNavigateToMap = {
+                    navController.navigate(Screen.Map.route)
                 }
             )
         }
