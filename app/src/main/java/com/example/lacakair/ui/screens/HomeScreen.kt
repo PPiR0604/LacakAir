@@ -1,6 +1,7 @@
 package com.example.lacakair.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -35,7 +37,8 @@ fun HomeScreen(
     postViewModel: PostViewModel,
     onLogout: () -> Unit,
     onNavigateToCreatePost: () -> Unit,
-    onNavigateToMap: () -> Unit = {}
+    onNavigateToMap: () -> Unit = {},
+    onNavigateToProfile: (String) -> Unit = {}
 ) {
     val posts by postViewModel.posts.collectAsState()
     val isLoading by postViewModel.isLoading.collectAsState()
@@ -52,6 +55,12 @@ fun HomeScreen(
                     )
                 },
                 actions = {
+                    // Profile button
+                    IconButton(onClick = {
+                        currentUser?.uid?.let { onNavigateToProfile(it) }
+                    }) {
+                        Icon(Icons.Default.Person, contentDescription = "Profile")
+                    }
                     IconButton(onClick = onNavigateToMap) {
                         Icon(painter = painterResource(com.example.lacakair.R.drawable.map), contentDescription = "Peta", modifier = Modifier.padding(4.dp))
                     }
@@ -115,7 +124,8 @@ fun HomeScreen(
                         PostCard(
                             post = post,
                             currentUserId = currentUser?.uid ?: "",
-                            onLikeClick = { postViewModel.toggleLike(post.id) }
+                            onLikeClick = { postViewModel.toggleLike(post.id) },
+                            onUserClick = { onNavigateToProfile(post.userId) }
                         )
                     }
                 }
@@ -128,7 +138,8 @@ fun HomeScreen(
 fun PostCard(
     post: Post,
     currentUserId: String,
-    onLikeClick: () -> Unit
+    onLikeClick: () -> Unit,
+    onUserClick: () -> Unit = {}
 ) {
     val isLiked = post.likes.contains(currentUserId)
 
@@ -149,6 +160,7 @@ fun PostCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clickable(onClick = onUserClick)
                     .padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {

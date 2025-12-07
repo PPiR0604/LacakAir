@@ -156,12 +156,17 @@ fun CreatePostScreen(
                 ) {
                     OutlinedButton(
                         onClick = onNavigateToCamera,
-                        modifier = Modifier.weight(2f),
+                        modifier = Modifier.weight(1f),
                         enabled = !isUploading
                     ) {
-                        Icon(painter = painterResource(com.example.lacakair.R.drawable.photo_camera_interface_symbol_for_button), contentDescription = null, modifier = Modifier.padding(4.dp))
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Text("Kamera")
+                        Column( horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                painter = painterResource(id = com.example.lacakair.R.drawable.photo_camera_interface_symbol_for_button), modifier = Modifier.size(56.dp),
+                                contentDescription = null
+                            )
+                            Spacer(modifier = Modifier.width(0.dp))
+                            Text("Ambil Foto")
+                        }
                     }
 
                     OutlinedButton(
@@ -169,9 +174,14 @@ fun CreatePostScreen(
                         modifier = Modifier.weight(1f),
                         enabled = !isUploading
                     ) {
-                        Icon(painter = painterResource(com.example.lacakair.R.drawable.image), contentDescription = null)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Galeri")
+                        Column( horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                painter = painterResource(id = com.example.lacakair.R.drawable.image), modifier = Modifier.size(56.dp),
+                                contentDescription = null
+                            )
+                            Spacer(modifier = Modifier.width(0.dp))
+                            Text("Dari Galeri")
+                        }
                     }
                 }
             } else {

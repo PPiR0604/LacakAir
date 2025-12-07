@@ -20,14 +20,17 @@ import com.example.lacakair.ui.screens.CreatePostScreen
 import com.example.lacakair.ui.screens.HomeScreen
 import com.example.lacakair.ui.screens.LoginScreen
 import com.example.lacakair.ui.screens.MapScreen
+import com.example.lacakair.ui.screens.ProfileScreen
 import com.example.lacakair.ui.screens.RegisterScreen
 import com.example.lacakair.viewmodel.PostViewModel
+import com.example.lacakair.viewmodel.ProfileViewModel
 
 @Composable
 fun NavGraph(
     navController: NavHostController,
     authViewModel: AuthViewModel,
-    postViewModel: PostViewModel
+    postViewModel: PostViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     val authState by authViewModel.authState.collectAsState()
     var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
@@ -91,6 +94,9 @@ fun NavGraph(
                 },
                 onNavigateToMap = {
                     navController.navigate(Screen.Map.route)
+                },
+                onNavigateToProfile = { userId ->
+                    navController.navigate(Screen.Profile.createRoute(userId))
                 }
             )
         }
@@ -163,6 +169,24 @@ fun NavGraph(
         composable(Screen.Map.route) {
             MapScreen(
                 posts = postViewModel.posts.collectAsState().value,
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = Screen.Profile.route,
+            arguments = listOf(
+                navArgument("userId") {
+                    type = NavType.StringType
+                }
+            )
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
+            ProfileScreen(
+                userId = userId,
+                profileViewModel = profileViewModel,
                 onNavigateBack = {
                     navController.popBackStack()
                 }

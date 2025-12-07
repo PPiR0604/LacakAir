@@ -209,6 +209,7 @@ fun OpenStreetMapView(
             groupedPosts.forEach { (_, postsAtLocation) ->
                 val firstPost = postsAtLocation.first()
                 val marker = Marker(map)
+                marker.icon = resizeDrawable(context, com.example.lacakair.R.drawable.placeholder, 80, 80)
                 marker.position = GeoPoint(firstPost.latitude!!, firstPost.longitude!!)
                 marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
 
@@ -263,6 +264,7 @@ fun OpenStreetMapView(
 
                                 // Add marker at current location
                                 val marker = Marker(this)
+                                marker.icon = resizeDrawable(context, com.example.lacakair.R.drawable.location, 80, 80)
                                 marker.position = geoPoint
                                 marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                                 marker.title = "Lokasi Anda"
@@ -335,6 +337,14 @@ fun OpenStreetMapView(
             )
         }
     }
+}
+fun resizeDrawable(context: Context, drawableId: Int, width: Int, height: Int): android.graphics.drawable.Drawable? {
+    val drawable = ContextCompat.getDrawable(context, drawableId)
+    val bitmap = android.graphics.Bitmap.createBitmap(width, height, android.graphics.Bitmap.Config.ARGB_8888)
+    val canvas = android.graphics.Canvas(bitmap)
+    drawable?.setBounds(0, 0, canvas.width, canvas.height)
+    drawable?.draw(canvas)
+    return android.graphics.drawable.BitmapDrawable(context.resources, bitmap)
 }
 
 @Composable

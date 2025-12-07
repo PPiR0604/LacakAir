@@ -15,10 +15,12 @@ import com.example.lacakair.auth.AuthViewModel
 import com.example.lacakair.navigation.NavGraph
 import com.example.lacakair.ui.theme.LacakAirTheme
 import com.example.lacakair.viewmodel.PostViewModel
+import com.example.lacakair.viewmodel.ProfileViewModel
 
 class MainActivity : ComponentActivity() {
     private val authViewModel: AuthViewModel by viewModels()
     private val postViewModel: PostViewModel by viewModels()
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +37,8 @@ class MainActivity : ComponentActivity() {
                         NavGraph(
                             navController = navController,
                             authViewModel = authViewModel,
-                            postViewModel = postViewModel
+                            postViewModel = postViewModel,
+                            profileViewModel = profileViewModel
                         )
                     }
                 }

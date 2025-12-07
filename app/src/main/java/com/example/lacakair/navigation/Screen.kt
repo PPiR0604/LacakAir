@@ -11,4 +11,9 @@ sealed class Screen(val route: String) {
             return if (imageUri != null) "create_post?imageUri=$imageUri" else "create_post"
         }
     }
+    object Profile : Screen("profile/{userId}") {
+        fun createRoute(userId: String): String {
+            return "profile/$userId"
+        }
+    }
 }
