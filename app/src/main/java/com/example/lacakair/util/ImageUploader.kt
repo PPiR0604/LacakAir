@@ -16,15 +16,13 @@ import java.net.URL
 import java.net.URLEncoder
 
 object ImageUploader {
-    // ImgBB API Key - Free, bisa daftar di https://api.imgbb.com/
-    private const val IMGBB_API_KEY = "115adb898f67d4147a56ef82d097976f" // Ganti dengan key Anda
+    private const val IMGBB_API_KEY = "YOUR API KEY" // Ganti dengan key Anda
     private const val IMGBB_UPLOAD_URL = "https://api.imgbb.com/1/upload"
 
-    // Maksimal ukuran gambar untuk upload cepat
-    private const val MAX_IMAGE_SIZE = 800 // Dikurangi dari 1024 ke 800px untuk lebih cepat
-    private const val JPEG_QUALITY = 60 // Dikurangi dari 80 ke 60 untuk ukuran lebih kecil
-    private const val CONNECTION_TIMEOUT = 30000 // 30 detik
-    private const val READ_TIMEOUT = 30000 // 30 detik
+    private const val MAX_IMAGE_SIZE = 800
+    private const val JPEG_QUALITY = 60
+    private const val CONNECTION_TIMEOUT = 30000
+    private const val READ_TIMEOUT = 30000
 
     suspend fun uploadImage(context: Context, imageUri: Uri): Result<String> = withContext(Dispatchers.IO) {
         try {
@@ -166,5 +164,4 @@ object ImageUploader {
 
         // Gunakan NO_WRAP untuk menghindari newline characters
         return Base64.encodeToString(byteArray, Base64.NO_WRAP)
-    }
-}
+    }}
